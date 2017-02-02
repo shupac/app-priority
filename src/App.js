@@ -35,10 +35,12 @@ class App extends Component {
       this.setState(({tasks}) => {
         tasks = snapshot.val();
         let id = tasks.length - 1;
-        console.log(snapshot.val(), id);
         return {id, tasks}
       });
     });
+  }
+  saveTasks(tasks) {
+    FBref.child('tasks').set(tasks);
   }
   createTask(text) {
     this.setState(({ id, tasks }) => {
@@ -50,13 +52,23 @@ class App extends Component {
         status: 'incomplete'
       };
       tasks.push(newTask);
-      FBref.child('tasks').set(tasks);
+      this.saveTasks(tasks);
       return {id, tasks};
-    })
+    });
+  }
+  updateTask(id, text) {
+    console.log(id, text);
+    this.setState(({tasks}) => {
+      let task = tasks.find(t => t.id === id);
+      console.log(task);
+      task.text = text;
+      this.saveTasks(tasks);
+      return {tasks}
+    });
   }
   render() {
     let taskItems = this.state.tasks.map(task => {
-      return <TaskItem task={task} key={task.id} />
+      return <TaskItem task={task} key={task.id} update={this.updateTask.bind(this, task.id)}/>
     });
 
     return (
@@ -95,10 +107,17 @@ class TaskItem extends Component {
       editable: false
     }
   }
-  edit() {
+  toggleEdit() {
     this.setState(({editable}) => {
       return {editable: !editable};
     });
+  }
+  save() {
+    this.props.update(this.input.value);
+    this.toggleEdit();
+  }
+  handleKeyPress(e) {
+    if (e.key === 'Enter') this.save();
   }
   render() {
     let item;
@@ -106,16 +125,15 @@ class TaskItem extends Component {
       item = (
         <li>
           {this.props.task.text}
-          <button onClick={this.edit.bind(this)}>edit</button>
+          <button onClick={this.toggleEdit.bind(this)}>edit</button>
         </li>
       );
     }
     else {
       item = (
         <li>
-          <input value={this.props.task.text} />
-          <button onClick={this.edit.bind(this)}>cancel</button>
-          <button onClick={this.edit.bind(this)}>save</button>
+          <input ref={n => this.input = n} defaultValue={this.props.task.text} onKeyPress={this.handleKeyPress.bind(this)}/>
+          <button onClick={this.save.bind(this)}>save</button>
         </li>
       );
     }
