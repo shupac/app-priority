@@ -33,15 +33,18 @@ class App extends Component {
   fetchTasks() {
     FBref.child('tasks').once('value').then(snapshot => {
       this.setState(({tasks}) => {
-        console.log(snapshot.val());
-        return {tasks: snapshot.val()}
+        tasks = snapshot.val();
+        let id = tasks.length - 1;
+        console.log(snapshot.val(), id);
+        return {id, tasks}
       });
     });
   }
   createTask(text) {
     this.setState(({ id, tasks }) => {
+      id += 1;
       let newTask = {
-        id: id++,
+        id: id,
         date: new Date(),
         text,
         status: 'incomplete'
@@ -68,15 +71,17 @@ class App extends Component {
 }
 
 class NewTask extends Component {
+  handleKeyPress(e) {
+    if (e.key === 'Enter') this.handleSubmit();
+  }
   handleSubmit() {
-    let task = this.refs.input.value;
-    this.props.update(task);
+    this.props.update(this.refs.input.value);
     this.refs.input.value = '';
   }
   render() {
     return (
       <div>
-        <input ref="input"/>
+        <input ref="input" onKeyPress={this.handleKeyPress.bind(this)} />
         <button onClick={this.handleSubmit.bind(this)}>Create Task</button>
       </div>
     );
