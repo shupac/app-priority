@@ -24,10 +24,12 @@ class DayTaskList extends Component {
     this.fetchTasks();
   }
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.date);
+    this.setState({tasks: []})
+    this.fetchTasks(nextProps.date);
   }
-  fetchTasks() {
-    FBref.child('tasks').child(this.props.date).once('value').then(snapshot => {
+  fetchTasks(date) {
+    date = date || this.props.date;
+    FBref.child('tasks').child(date).once('value').then(snapshot => {
       this.setState(({tasks}) => {
         tasks = snapshot.val();
         let id = tasks.length - 1;
