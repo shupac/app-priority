@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import NewTask from './components/NewTask';
+import TaskItem from './components/TaskItem';
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKZOAZNymyQKxT6KyigRNtqS6vS6PV1Gs",
@@ -57,87 +59,44 @@ class App extends Component {
     });
   }
   updateTask(id, text) {
-    console.log(id, text);
     this.setState(({tasks}) => {
       let task = tasks.find(t => t.id === id);
-      console.log(task);
-      task.text = text;
+      if (text !== null) task.text = text;
+      this.saveTasks(tasks);
+      return {tasks}
+    });
+  }
+  completeTask(id) {
+    this.setState(({tasks}) => {
+      let task = tasks.find(t => t.id === id);
+      if (task.status === 'incomplete') task.status = 'complete';
+      else if (task.status === 'complete') task.status = 'incomplete';
       this.saveTasks(tasks);
       return {tasks}
     });
   }
   render() {
-    let taskItems = this.state.tasks.map(task => {
-      return <TaskItem task={task} key={task.id} update={this.updateTask.bind(this, task.id)}/>
+    let incompleteTaskItems = [];
+    let completeTaskItems = [];
+    this.state.tasks.forEach(task => {
+      let taskItem = <TaskItem
+        task={task}
+        key={task.id}
+        update={this.updateTask.bind(this, task.id)}
+        completeTask={this.completeTask.bind(this, task.id)} />;
+      if (task.status === 'incomplete') incompleteTaskItems.push(taskItem);
+      if (task.status === 'complete') completeTaskItems.push(taskItem);
     });
 
     return (
       <div>
         <NewTask update={this.createTask.bind(this)} />
         <ul>
-          {taskItems}
+          {incompleteTaskItems}
+          {completeTaskItems}
         </ul>
       </div>
     )
-  }
-}
-
-class NewTask extends Component {
-  handleKeyPress(e) {
-    if (e.key === 'Enter') this.handleSubmit();
-  }
-  handleSubmit() {
-    this.props.update(this.refs.input.value);
-    this.refs.input.value = '';
-  }
-  render() {
-    return (
-      <div>
-        <input ref="input" onKeyPress={this.handleKeyPress.bind(this)} />
-        <button onClick={this.handleSubmit.bind(this)}>Create Task</button>
-      </div>
-    );
-  }
-};
-
-class TaskItem extends Component {
-  constructor() {
-    super();
-    this.state = {
-      editable: false
-    }
-  }
-  toggleEdit() {
-    this.setState(({editable}) => {
-      return {editable: !editable};
-    });
-  }
-  save() {
-    this.props.update(this.input.value);
-    this.toggleEdit();
-  }
-  handleKeyPress(e) {
-    if (e.key === 'Enter') this.save();
-  }
-  render() {
-    let item;
-    if (!this.state.editable) {
-      item = (
-        <li>
-          {this.props.task.text}
-          <button onClick={this.toggleEdit.bind(this)}>edit</button>
-        </li>
-      );
-    }
-    else {
-      item = (
-        <li>
-          <input ref={n => this.input = n} defaultValue={this.props.task.text} onKeyPress={this.handleKeyPress.bind(this)}/>
-          <button onClick={this.save.bind(this)}>save</button>
-        </li>
-      );
-    }
-    return item;
   }
 }
 

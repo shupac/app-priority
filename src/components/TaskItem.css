@@ -1,0 +1,11 @@
+.task-item span {
+  cursor: pointer;
+}
+
+.task-item.incomplete {
+  color: red;
+}
+
+.task-item.complete {
+  color: green;
+}
