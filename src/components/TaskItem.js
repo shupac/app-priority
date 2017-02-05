@@ -26,6 +26,7 @@ class TaskItem extends Component {
         <li className={className}>
           <span onClick={this.props.completeTask}>{this.props.task.text}</span>
           <button onClick={this.toggleEdit.bind(this)}>edit</button>
+          <button onClick={this.props.deleteTask.bind(this)}>delete</button>
         </li>
       );
     }

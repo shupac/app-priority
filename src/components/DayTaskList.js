@@ -7,7 +7,6 @@ class DayTaskList extends Component {
   constructor() {
     super();
     this.state = {
-      id: 0,
       tasks: [
         // {
         //   id,
@@ -31,27 +30,26 @@ class DayTaskList extends Component {
     date = date || this.props.date;
     FBref.child('tasks').child(date).once('value').then(snapshot => {
       this.setState(({tasks}) => {
-        tasks = snapshot.val();
-        let id = tasks.length - 1;
-        return {id, tasks}
+        if (snapshot.val()) tasks = snapshot.val();
+        return {tasks};
       });
     });
   }
   saveTasks(tasks) {
-    FBref.child('tasks').set(tasks);
+    FBref.child('tasks').child(this.props.date).set(tasks);
   }
   createTask(text) {
-    this.setState(({ id, tasks }) => {
-      id += 1;
+    this.setState(({tasks}) => {
       let newTask = {
-        id: id,
+        id: this.props.id,
         date: new Date(),
         text,
         status: 'incomplete'
       };
       tasks.push(newTask);
       this.saveTasks(tasks);
-      return {id, tasks};
+      this.props.updateId();
+      return {tasks};
     });
   }
   updateTask(id, text) {
@@ -71,6 +69,13 @@ class DayTaskList extends Component {
       return {tasks}
     });
   }
+  deleteTask(id) {
+    this.setState(({tasks}) => {
+      tasks = tasks.filter(t => t.id !== id);
+      this.saveTasks(tasks);
+      return {tasks}
+    });
+  }
   render() {
     let incompleteTaskItems = [];
     let completeTaskItems = [];
@@ -79,7 +84,8 @@ class DayTaskList extends Component {
         task={task}
         key={task.id}
         update={this.updateTask.bind(this, task.id)}
-        completeTask={this.completeTask.bind(this, task.id)} />;
+        completeTask={this.completeTask.bind(this, task.id)}
+        deleteTask={this.deleteTask.bind(this, task.id)} />;
       if (task.status === 'incomplete') incompleteTaskItems.push(taskItem);
       if (task.status === 'complete') completeTaskItems.push(taskItem);
     });
