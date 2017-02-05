@@ -1,11 +1,22 @@
+.task-item {
+  list-style: none;
+  border: 1px solid #ccc;
+}
+
 .task-item span {
+  display: inline-block;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
   cursor: pointer;
 }
 
 .task-item.incomplete {
-  color: red;
+  background-color: #4EDC66;
 }
 
 .task-item.complete {
-  color: green;
+  background-color: #bbb;
+  color: #666;
+  font-weight: 100px;
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FBref from '../common/firebase';
 import NewTask from './NewTask';
 import TaskItem from './TaskItem';
+import './DayTaskList.css';
 
 class DayTaskList extends Component {
   constructor() {
@@ -93,7 +94,7 @@ class DayTaskList extends Component {
     return (
       <div>
         <NewTask update={this.createTask.bind(this)} />
-        <ul>
+        <ul className="task-list">
           {incompleteTaskItems}
           {completeTaskItems}
         </ul>
