@@ -8,16 +8,7 @@ class DayTaskList extends Component {
   constructor() {
     super();
     this.state = {
-      tasks: [
-        // {
-        //   id,
-        //   date,
-        //   text,
-        //   status,
-        //   priority,
-        //   duration
-        // }
-      ]
+      tasks: []
     }
   }
   componentWillMount() {
@@ -32,6 +23,7 @@ class DayTaskList extends Component {
     FBref.child('tasks').child(date).once('value').then(snapshot => {
       this.setState(({tasks}) => {
         if (snapshot.val()) tasks = snapshot.val();
+        else tasks = [];
         return {tasks};
       });
     });

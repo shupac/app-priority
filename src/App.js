@@ -1,30 +1,38 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { hashHistory } from 'react-router'
 import moment from 'moment';
 import FBref from './common/firebase';
 import DayTaskList from './components/DayTaskList';
+import LongTermGoals from './components/LongTermGoals';
 
 class App extends Component {
   constructor() {
-    super();
-    this.state = {
-      id: 0,
-      date: moment().format('YYYY-MM-DD')
-    }
+    super()
+    this.state = {}
   }
   componentWillMount() {
+    this.setDateState(this.props.params.date);
     FBref.child('id').once('value').then(snapshot => {
       this.setState({id: snapshot.val()});
-      console.log('id', snapshot.val());
     });
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setDateState(nextProps.params.date);
+  }
+  setDateState(date) {
+    if (date) this.setState({date});
+    else hashHistory.push(moment().format('YYYY-MM-DD'));
   }
   goToPrevDate() {
     this.setState(({date}) => {
-      return {date: moment(date).subtract(1, 'd').format('YYYY-MM-DD')};
+      const newDate = moment(date).subtract(1, 'd').format('YYYY-MM-DD')
+      hashHistory.push(newDate);
     });
   }
   goToNextDate() {
     this.setState(({date}) => {
-      return {date: moment(date).add(1, 'd').format('YYYY-MM-DD')};
+      const newDate = moment(date).add(1, 'd').format('YYYY-MM-DD')
+      hashHistory.push(newDate);
     });
   }
   updateId() {
@@ -35,10 +43,13 @@ class App extends Component {
     });
   }
   render() {
+    if (!this.state.date) return;
     return (
       <div>
+        <LongTermGoals />
+        <h2>Daily Priorities</h2>
         <DaySelector
-          date={this.state.date}
+          date={moment(this.state.date).format('ddd, M/D')}
           handlePrevDay={this.goToPrevDate.bind(this)}
           handleNextDay={this.goToNextDate.bind(this)}/>
         <DayTaskList date={this.state.date} id={this.state.id} updateId={this.updateId.bind(this)} />

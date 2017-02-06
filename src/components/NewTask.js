@@ -3,7 +3,9 @@ import Input from './Input';
 
 class NewTask extends Component {
   handleSubmit() {
-    this.props.update(this.input.input.value);
+    const task = this.input.input.value;
+    if (!task) return;
+    this.props.update(task);
     this.input.input.value = '';
   }
   render() {
