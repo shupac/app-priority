@@ -1,0 +1,6 @@
+.new-task input {
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid;
+  outline: none;
+}

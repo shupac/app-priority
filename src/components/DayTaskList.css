@@ -1,3 +1,7 @@
+div.day-task-list {
+  padding-top: 20px;
+}
+
 ul.task-list {
   padding: 0px;
 }

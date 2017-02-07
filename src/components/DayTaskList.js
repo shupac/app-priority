@@ -31,12 +31,12 @@ class DayTaskList extends Component {
   saveTasks(tasks) {
     FBref.child('tasks').child(this.props.date).set(tasks);
   }
-  createTask(text) {
+  createTask(text, time) {
     this.setState(({tasks}) => {
       let newTask = {
         id: this.props.id,
-        date: new Date(),
         text,
+        time,
         status: 'incomplete'
       };
       tasks.push(newTask);
@@ -45,10 +45,11 @@ class DayTaskList extends Component {
       return {tasks};
     });
   }
-  updateTask(id, text) {
+  updateTask(id, text, time) {
     this.setState(({tasks}) => {
       let task = tasks.find(t => t.id === id);
       if (text !== null) task.text = text;
+      task.time = time;
       this.saveTasks(tasks);
       return {tasks}
     });
@@ -84,7 +85,7 @@ class DayTaskList extends Component {
     });
 
     return (
-      <div>
+      <div className="day-task-list">
         <NewTask update={this.createTask.bind(this)} />
         <ul className="task-list">
           {incompleteTaskItems}

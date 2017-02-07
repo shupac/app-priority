@@ -5,12 +5,26 @@
   padding-left: 40px;
 }
 
-.task-item span {
+.task-item span, .task-field, .time-field {
   display: inline-block;
-  width: 200px;
   height: 30px;
+  font-size: 16px;
   line-height: 30px;
-  cursor: pointer;
+}
+
+.task-item input {
+  padding: 0 0 0 5px;
+  background-color: rgba(255,255,255,0.3);
+  border: none;
+  outline: none;
+}
+
+.task-field {
+  width: 200px;
+}
+
+.time-field {
+  width: 40px;
 }
 
 .task-item.incomplete {

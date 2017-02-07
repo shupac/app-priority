@@ -4,6 +4,7 @@ import moment from 'moment';
 import FBref from './common/firebase';
 import DayTaskList from './components/DayTaskList';
 import LongTermGoals from './components/LongTermGoals';
+import DaySelector from './components/DaySelector';
 
 class App extends Component {
   constructor() {
@@ -56,16 +57,6 @@ class App extends Component {
       </div>
     )
   }
-}
-
-const DaySelector = (props) => {
-  return (
-    <div>
-      <button onClick={props.handlePrevDay}>prev</button>
-      <span>{props.date}</span>
-      <button onClick={props.handleNextDay}>next</button>
-    </div>
-  );
 }
 
 export default App;

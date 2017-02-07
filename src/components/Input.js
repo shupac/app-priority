@@ -6,9 +6,11 @@ class Input extends Component {
   }
   render() {
     return <input
+      className={this.props.className}
       ref={n => this.input = n}
       onKeyPress={this.handleKeyPress.bind(this)}
-      defaultValue={this.props.defaultValue} />
+      defaultValue={this.props.defaultValue}
+      placeholder={this.props.placeholder} />
   }
 }
 
