@@ -1,20 +1,26 @@
-.task-item {
+.task-item, .task-total {
   list-style: none;
   border: 1px solid #ccc;
   margin-left: -40px;
   padding-left: 40px;
 }
 
-.task-item span, .task-field, .time-field {
+.task-total {
+  font-weight: bold;
+  border: none !important;
+}
+
+.task-item span, .task-field, .time-field, .task-total {
   display: inline-block;
   height: 30px;
   font-size: 16px;
   line-height: 30px;
 }
 
-.task-item input {
-  padding: 0 0 0 5px;
-  background-color: rgba(255,255,255,0.3);
+.task-item input[type=text] {
+  padding: 0;
+  background-color: transparent;
+  color: #0E1493;
   border: none;
   outline: none;
 }
@@ -25,6 +31,15 @@
 
 .time-field {
   width: 40px;
+}
+
+.task-item input[type=checkbox] {
+  position: relative;
+  top: 4px;
+  height: 20px;
+  width: 22px;
+  margin: 0;
+  margin-left: -22px;
 }
 
 .task-item.incomplete {

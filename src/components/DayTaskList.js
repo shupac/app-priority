@@ -54,11 +54,11 @@ class DayTaskList extends Component {
       return {tasks}
     });
   }
-  completeTask(id) {
+  toggleTask(id, event) {
+    const status = event.target.checked ? 'complete' : 'incomplete'
     this.setState(({tasks}) => {
       let task = tasks.find(t => t.id === id);
-      if (task.status === 'incomplete') task.status = 'complete';
-      else if (task.status === 'complete') task.status = 'incomplete';
+      task.status = status
       this.saveTasks(tasks);
       return {tasks}
     });
@@ -71,16 +71,21 @@ class DayTaskList extends Component {
     });
   }
   render() {
-    let incompleteTaskItems = [];
-    let completeTaskItems = [];
+    const incompleteTaskItems = [];
+    const completeTaskItems = [];
+    var totalHours = 0;
+
     this.state.tasks.forEach(task => {
       let taskItem = <TaskItem
         task={task}
         key={task.id}
         update={this.updateTask.bind(this, task.id)}
-        completeTask={this.completeTask.bind(this, task.id)}
+        handleToggle={this.toggleTask.bind(this, task.id)}
         deleteTask={this.deleteTask.bind(this, task.id)} />;
-      if (task.status === 'incomplete') incompleteTaskItems.push(taskItem);
+      if (task.status === 'incomplete') {
+        incompleteTaskItems.push(taskItem);
+        totalHours += task.time
+      }
       if (task.status === 'complete') completeTaskItems.push(taskItem);
     });
 
@@ -89,6 +94,14 @@ class DayTaskList extends Component {
         <NewTask update={this.createTask.bind(this)} />
         <ul className="task-list">
           {incompleteTaskItems}
+          {incompleteTaskItems.length ?
+            <li className="task-total">
+              <span className="task-field">Total Hours</span>{' '}
+              <span className="time-field">{totalHours}</span>
+            </li> : null}
+        </ul>
+        {completeTaskItems.length ? <h3>Completed Tasks</h3> : null}
+        <ul className="task-list">
           {completeTaskItems}
         </ul>
       </div>

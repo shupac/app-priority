@@ -24,6 +24,7 @@ class TaskItem extends Component {
     if (!this.state.editable) {
       item = (
         <li className={className}>
+          <input className="task-status" type="checkbox" checked={this.props.task.status === 'complete'} onChange={this.props.handleToggle} />
           <span className="task-field" onClick={this.props.completeTask}>{this.props.task.text}</span>{' '}
           <span className="time-field" onClick={this.props.completeTask}>{this.props.task.time}</span>{' '}
           <button onClick={this.toggleEdit.bind(this)}>edit</button>{' '}
@@ -47,7 +48,7 @@ class EditForm extends Component {
     this.input.input.focus()
   }
   handleSubmit(e) {
-    this.props.submit(e.target.elements[0].value, e.target.elements[1].value)
+    this.props.submit(e.target.elements[0].value, parseFloat(e.target.elements[1].value))
   }
   submitForm() {
     this.form.submit();

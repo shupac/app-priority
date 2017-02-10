@@ -5,7 +5,7 @@ import './NewTask.css'
 class NewTask extends Component {
   handleSubmit(e) {
     const task = e.target.elements[0].value;
-    const time = e.target.elements[1].value;
+    const time = parseFloat(e.target.elements[1].value);
     if (!task) return;
     this.props.update(task, time);
     this.form.reset();

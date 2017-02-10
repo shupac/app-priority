@@ -44,7 +44,7 @@ class App extends Component {
     });
   }
   render() {
-    if (!this.state.date) return;
+    if (!this.state.date) return <div></div>;
     return (
       <div>
         <LongTermGoals />
